@@ -1,4 +1,10 @@
-
+import React from 'react';
+import { connect } from 'react-redux'
+import { BrowserRouter as Router, Route, Link, Switch, withRouter } from 'react-router-dom';
+import Profile from './Profile'
+import Store from '../store'
+import Header from './Header'
+import Login from './Login'
 
 class TriviaApp extends React.Component {
 
