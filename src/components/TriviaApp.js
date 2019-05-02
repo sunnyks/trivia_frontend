@@ -5,6 +5,9 @@ import Profile from './Profile'
 import Store from '../store'
 import Header from './Header'
 import Login from './Login'
+import Leaderboard from './Leaderboard'
+import Stats from './Stats'
+import Play from './Play'
 
 class TriviaApp extends React.Component {
 
@@ -17,7 +20,9 @@ class TriviaApp extends React.Component {
       <Route path="/login" component={Login} />
       <Route exact path="/signup" component={Signup} />
       <Route path="/profile" component={withRouter(Profile)} />
-      other routes (leaderboard/play)
+      <Route path="/leaderboard" component={Leaderboard} />
+      <Route path="/stats" component={Stats} />
+      <Route path="/play" component={Play} />
     </Switch>
     </div>
   )
