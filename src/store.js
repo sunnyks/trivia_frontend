@@ -2,13 +2,36 @@ import { createStore } from 'redux';
 
 const initialState = {
   user: null,
-  all_categories: null
+  all_categories: null,
+  category: 9,
+  difficulty: "easy",
+  streak: 0,
+  sessionID: null,
+  question: null,
+  answers: null,
+  correct: null,
 }
 
 const rootReducer = (oldState = initialState, action) => {
   switch (action.type) {
     case "fillCat": {
       return {...oldState, all_categories: action.all_categories}
+    }
+    case "fillQ": {
+      return {...oldState, question: action.question, answers: action.answers, correct:action.correct}
+    }
+    case "fillSessionID": {
+      return {...oldState, sessionID: action.sessionID}
+    }
+    case "correct": {
+      // refactor into reducers
+      return {...oldState, streak: action.streak, difficulty: action.difficulty}
+    }
+    case "incorrect": {
+      return {...oldState, streak: 0, difficulty: "easy", question: null, answers: null, correct: null}
+    }
+    case "selectCat": {
+      return {...oldState, category: action.category, question: null, answers: null, correct: null, difficulty: "easy"}
     }
     default: {
       return oldState
