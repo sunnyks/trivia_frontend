@@ -13,6 +13,9 @@ class TriviaApp extends React.Component {
 
   componentDidMount() {
     //fetch all categories
+    fetch('https://opentdb.com/api_category.php').then(res => res.json()).then((cat) => {
+      Store.dispatch({type: 'fillCat', all_categories: cat.trivia_categories})
+    })
   }
 
 
