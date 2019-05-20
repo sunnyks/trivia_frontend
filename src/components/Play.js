@@ -26,30 +26,10 @@ class Play extends React.Component {
   }
 
   componentDidMount() {
-    // maybe don't fetch question on mount and instead add a "START" button
-    // const default_url="https://opentdb.com/api.php?amount=1&category=9&difficulty=medium&type=multiple&encode=url3986"
-    //fetch question
-    // NO FETCH SESSION TOKEN HERE https://opentdb.com/api_token.php?command=request
+    // fetch and store session token so users arent presented the same question twice
     fetch('https://opentdb.com/api_token.php?command=request').then(res => res.json()).then((sessionID) => {
-      Store.dispatch({type: "fillSessionID", sessionID: sessionID})
+      Store.dispatch({type: "fillSessionID", sessionID: sessionID['token']})
     })
-
-    // if (((this.props.category || this.props.difficulty)) == null) {
-    //   fetch(default_url).then(res => res.json()).then(q => {
-    //     console.log(q)
-    //     console.log(q['results'][0]['question'])
-    //     console.log(q['results'][0]['incorrect_answers'])
-    //     console.log(q['results'][0]['correct_answer'])
-    //     Store.dispatch({type: "fillQ",
-    //     question: q['results'][0]['question'],
-    //     answers: q['results'][0]['incorrect_answers'],
-    //     correct: q['results'][0]['correct_answer']})
-    //     // this.setState({
-    //     //   question: q['results'][0]['question'],
-    //     //   answers: q['results'][0]['incorrect_answers'],
-    //     //   correct: q['results'][0]['correct_answer']})
-    //     })
-    // }
     //Base64 encoding?
   }
 
@@ -63,7 +43,7 @@ class Play extends React.Component {
     //put together url
     //only call this function at the beginning and when streak reaches certain #s
     const default_url="https://opentdb.com/api.php?amount=1&category=9&difficulty=medium&type=multiple&encode=url3986"
-    const qurl=`https://opentdb.com/api.php?amount=1&category=${this.props.category}&difficulty=${this.props.difficulty}&type=multiple&encode=url3986`
+    const qurl=`https://opentdb.com/api.php?amount=1&category=${this.props.category}&difficulty=${this.props.difficulty}&type=multiple&encode=url3986&token=${this.props.sessionID}`
     return qurl
   }
 
@@ -153,7 +133,10 @@ class Play extends React.Component {
         <button onClick={() => this.fetchQ()}> START! </button>
       </div>
       <div>
-        {decodeURIComponent(this.props.question)}
+        <h1>Streak: {this.props.streak}</h1>
+      </div>
+      <div>
+        <h1>{this.props.question ? decodeURIComponent(this.props.question) : "Pick a category!"}</h1>
       </div>
       <div>
         {decodeURIComponent(this.props.answers)},
@@ -175,7 +158,8 @@ const mapStateToProps = state => {
     streak: state.streak,
     question: state.question,
     answers: state.answers,
-    correct: state.correct
+    correct: state.correct,
+    sessionID: state.sessionID
     }
 }
 
