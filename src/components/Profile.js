@@ -7,7 +7,8 @@ class Profile extends React.Component {
   render() {
   return(
     <div>
-      (if logged in) Display User Stats (else redirect to login)
+      {/*(if logged in) Display User Stats (else redirect to login)*/}
+      coming soon
     </div>
   )
 }

@@ -28,7 +28,7 @@ const rootReducer = (oldState = initialState, action) => {
       return {...oldState, streak: action.streak, difficulty: action.difficulty}
     }
     case "incorrect": {
-      return {...oldState, streak: 0, difficulty: "easy", question: null, answers: null, correct: null}
+      return {...oldState, streak: 0, difficulty: "easy", question: "Wrong! Try again!", answers: null, correct: null}
     }
     case "selectCat": {
       return {...oldState, category: action.category, question: null, answers: null, correct: null, difficulty: "easy"}

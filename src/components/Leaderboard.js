@@ -7,7 +7,8 @@ class Leaderboard extends React.Component {
   render() {
   return(
     <div>
-      Leaderboard (overall & sort by categories)
+      Leaderboard {/*(overall & sort by categories)*/}
+      coming soon
     </div>
   )
 }

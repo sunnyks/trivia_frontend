@@ -4,24 +4,11 @@ import Store from '../store'
 
 class Play extends React.Component {
 
-//   constructor(props) {
-//   super(props)
-//   this.state = {
-//     question: null,
-//     answers: null,
-//     correct: null,
-//     sessionID: null,
-//     category: 9,
-//     difficulty: "easy",
-//     streak: 0,
-//     questionURL: null
-//   }
-// }
 
   constructor(props) {
     super(props)
     this.state = {
-      playing: false
+      score: false
     }
   }
 
@@ -30,25 +17,31 @@ class Play extends React.Component {
     fetch('https://opentdb.com/api_token.php?command=request').then(res => res.json()).then((sessionID) => {
       Store.dispatch({type: "fillSessionID", sessionID: sessionID['token']})
     })
-    //Base64 encoding?
   }
 
   selectCategory = (e) => {
     console.log(e.target.value)
-
     Store.dispatch({type: "selectCat", category: e.target.value})
   }
 
   buildURL = () => {
     //put together url
     //only call this function at the beginning and when streak reaches certain #s
+    // implement base 64 encoding
     const default_url="https://opentdb.com/api.php?amount=1&category=9&difficulty=medium&type=multiple&encode=url3986"
     const qurl=`https://opentdb.com/api.php?amount=1&category=${this.props.category}&difficulty=${this.props.difficulty}&type=multiple&encode=url3986&token=${this.props.sessionID}`
+    console.log(qurl)
     return qurl
+  }
+
+  startGame = () => {
+    this.setState({score: false})
+    this.fetchQ()
   }
 
   fetchQ = () => {
     fetch(this.buildURL()).then(res => res.json()).then(q => {
+      // refactor this
       console.log(q)
       console.log(q['results'][0]['question'])
       console.log(q['results'][0]['incorrect_answers'])
@@ -105,11 +98,16 @@ class Play extends React.Component {
     }
     else {
       console.log("wrong!")
-      // refactor
+      this.setState({score: this.props.streak})
       Store.dispatch({type: "incorrect"})
+      fetch(`https://opentdb.com/api_token.php?command=reset&token=${this.props.sessionID}`).then(res => res.json()).then(console.log)
 
       // post results to database
     }
+  }
+
+  postScore = () => {
+
   }
 
   listCategories = () => {
@@ -122,26 +120,24 @@ class Play extends React.Component {
 
   return(
     <div>
-      keep track of streak
-      display category
-      add timer component
-      add question component which contains answer choices
       <div>
         <select id="category" onChange={(e)=>{this.selectCategory(e)}} value={this.props.category}>
           {this.props.all_categories ? this.listCategories() : null}
         </select>
-        <button onClick={() => this.fetchQ()}> START! </button>
+        <button onClick={() => this.startGame()}> START! </button>
       </div>
       <div>
         <h1>Streak: {this.props.streak}</h1>
+        {/* add timer component */}
       </div>
       <div>
         <h1>{this.props.question ? decodeURIComponent(this.props.question) : "Pick a category!"}</h1>
       </div>
       <div>
-        {decodeURIComponent(this.props.answers)},
-        {decodeURIComponent(this.props.correct)}
+        {/*{decodeURIComponent(this.props.answers)},
+        {decodeURIComponent(this.props.correct)}*/}
         {this.props.answers ? this.displayAnswers() : null}
+        {this.state.score ? `Your score was ${this.state.score}! Come back when the leaderboards are up for a shot at eternal glory!` : null}
       </div>
     </div>
   )
