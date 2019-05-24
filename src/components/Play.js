@@ -35,6 +35,7 @@ class Play extends React.Component {
   }
 
   startGame = () => {
+    Store.dispatch({type: "start"})
     this.setState({score: false})
     this.fetchQ()
   }
@@ -58,13 +59,14 @@ class Play extends React.Component {
   }
 
   displayAnswers = () => {
-    if (this.props.answers === null) return
+    // if (this.props.answers === null) return
     const correct_index = Math.floor(Math.random() * (4))
     console.log(correct_index)
     const answer_choices = this.props.answers
     console.log(answer_choices)
-    const all_answers = answer_choices.splice(correct_index, 0, this.props.correct)
-    console.log(all_answers)
+    if (answer_choices.indexOf(this.props.correct) === -1) {
+    answer_choices.splice(correct_index, 0, this.props.correct)
+    }
     console.log(this.props.answers)
     // debugger
     return this.props.answers.map((ans) => {

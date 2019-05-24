@@ -17,6 +17,9 @@ const rootReducer = (oldState = initialState, action) => {
     case "fillCat": {
       return {...oldState, all_categories: action.all_categories}
     }
+    case "start": {
+      return {...oldState, streak: 0, difficulty: "easy"}
+    }
     case "fillQ": {
       return {...oldState, question: action.question, answers: action.answers, correct:action.correct}
     }
