@@ -3,7 +3,7 @@ import { createStore } from 'redux';
 const initialState = {
   user: null,
   all_categories: null,
-  category: 9,
+  category: null,
   difficulty: "easy",
   streak: 0,
   sessionID: null,

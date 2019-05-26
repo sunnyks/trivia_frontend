@@ -1,6 +1,7 @@
 import React from 'react';
 import { connect } from 'react-redux'
 import Store from '../store'
+import { Button, Dropdown } from 'semantic-ui-react'
 
 class Play extends React.Component {
 
@@ -19,9 +20,11 @@ class Play extends React.Component {
     })
   }
 
-  selectCategory = (e) => {
+  selectCategory = (e, value) => {
     console.log(e.target.value)
-    Store.dispatch({type: "selectCat", category: e.target.value})
+    console.log(value)
+    // debugger
+    Store.dispatch({type: "selectCat", category: value.value})
   }
 
   buildURL = () => {
@@ -35,6 +38,7 @@ class Play extends React.Component {
   }
 
   startGame = () => {
+    if (this.props.category === null) return
     Store.dispatch({type: "start"})
     this.setState({score: false})
     this.fetchQ()
@@ -70,7 +74,7 @@ class Play extends React.Component {
     console.log(this.props.answers)
     // debugger
     return this.props.answers.map((ans) => {
-      return <div><button onClick={() => this.submitAnswer(ans)}>{decodeURIComponent(ans)}</button></div>
+      return <div class="gameAnswer"><Button size='massive' onMouseDown={e => e.preventDefault()} onClick={() => this.submitAnswer(ans)}>{decodeURIComponent(ans)}</Button></div>
     })
 
   }
@@ -112,6 +116,12 @@ class Play extends React.Component {
 
   }
 
+  categoryOptions = () => {
+    return this.props.all_categories.map(cat => {
+      return {key: cat.name, text: cat.name, value: cat.id}
+    })
+  }
+
   listCategories = () => {
     return this.props.all_categories.map((cat) => {
       return <option value={cat.id}>{cat.name}</option>
@@ -122,23 +132,29 @@ class Play extends React.Component {
 
   return(
     <div>
-      <div>
-        <select id="category" onChange={(e)=>{this.selectCategory(e)}} value={this.props.category}>
-          {this.props.all_categories ? this.listCategories() : null}
-        </select>
-        <button onClick={() => this.startGame()}> START! </button>
+      <div class="gameOptions">
+      { this.props.all_categories ?
+      <Dropdown
+        placeholder='Select Category'
+        selection
+        options={this.categoryOptions()}
+        onChange={this.selectCategory} value={this.props.category}
+      /> : null }
+        <Button onClick={() => this.startGame()}> START! </Button>
       </div>
-      <div>
+      <div class="gameStatus">
         <h1>Streak: {this.props.streak}</h1>
         {/* add timer component */}
       </div>
-      <div>
-        <h1>{this.props.question ? decodeURIComponent(this.props.question) : "Pick a category!"}</h1>
+      <div class="gameQuestion">
+        <p>{this.props.question ? decodeURIComponent(this.props.question) : "Pick a category!"}</p>
       </div>
-      <div>
+      <div class="gameAnswers">
         {/*{decodeURIComponent(this.props.answers)},
         {decodeURIComponent(this.props.correct)}*/}
-        {this.props.answers ? this.displayAnswers() : null}
+        <Button.Group vertical>
+          {this.props.answers ? this.displayAnswers() : null}
+        </Button.Group>
         {this.state.score ? `Your score was ${this.state.score}! Come back when the leaderboards are up for a shot at eternal glory!` : null}
       </div>
     </div>
